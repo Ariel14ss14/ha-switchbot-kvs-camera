@@ -134,7 +134,7 @@ class SwitchBotKVSCameraEntity(SwitchBotKVSEntity, CameraEntity):
             return self.camera_image_cache[cacheKey][1]
 
         rtsp_port = await self._regist_go2rtc_stream_if_not_exists(isDownload)
-        domain = re.search(r"http://([^:/]+)", self.hass.data["go2rtc"]).group(1)
+        domain = re.search(r"http://([^:/]+)", self.hass.data["go2rtc"].url).group(1)
         stream_source = f"rtsp://{domain}:{rtsp_port}/{self.entity_id}"
         _LOGGER.debug("stream_source %s", stream_source)
 
@@ -310,9 +310,10 @@ class SwitchBotKVSCameraEntity(SwitchBotKVSEntity, CameraEntity):
         return channel_arn, endpoints_by_protocol, ice_servers
 
     async def _regist_go2rtc_stream_if_not_exists(self, isDownload: bool) -> str:
-        rest_client = Go2RtcRestClient(
-            async_get_clientsession(self.hass), self.hass.data["go2rtc"]
-        )
+        config = self.hass.data["go2rtc"]
+        url = config.url
+        session = config.session
+        rest_client = Go2RtcRestClient(session, url)
         resp = await rest_client._client.request("GET", "/api")  # noqa: SLF001
         respJson = await resp.json()
         rtsp_port: str = respJson["rtsp"]["listen"].split(":")[1]
@@ -344,8 +345,8 @@ class SwitchBotKVSCameraEntity(SwitchBotKVSEntity, CameraEntity):
     ) -> None:
         """Handle the async WebRTC offer."""
         self._sessions[session_id] = ws_client = Go2RtcWsClient(
-            async_get_clientsession(self.hass),
-            self.hass.data["go2rtc"],
+            self.hass.data["go2rtc"].session,
+            self.hass.data["go2rtc"].url,
             source=self.entity_id,
         )
         await self._regist_go2rtc_stream_if_not_exists(False)
