@@ -110,8 +110,9 @@ class SwitchBotKVSCameraEntity(SwitchBotKVSEntity, CameraEntity):
         self._sessions: dict[str, Go2RtcWsClient] = {}
         self.camera_image_interval = timedelta(seconds=snapshot_interval)
         self.camera_image_cache: dict[tuple[int, int], tuple[datetime, bytes]] = {}
-        self.entity_id = f"camera.switchbot_camera_{device.device_mac}"
-        self.unique_id = f"camera.switchbot_camera_{device.device_mac}"
+        
+        self.entity_id = f"camera.switchbot_camera_{device.device_mac.lower()}"
+        self.unique_id = f"camera.switchbot_camera_{device.device_mac.lower()}"
 
     async def async_camera_image(
         self, width: int | None = None, height: int | None = None
