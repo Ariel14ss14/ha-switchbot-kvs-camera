@@ -110,20 +110,26 @@ class SwitchBotKVSTextEntity(SwitchBotKVSEntity, TextEntity):
         )
         self._attr_icon = text_definition.icon
         self._attr_has_entity_name = True
+        
+        
         self.entity_id = (
-            f"text.switchbot_camera_{device.device_mac}_{text_definition.key}"
+            f"text.switchbot_camera_{device.device_mac.lower()}_{text_definition.key}"
         )
         self.unique_id = (
-            f"text.switchbot_camera_{device.device_mac}_{text_definition.key}"
+            f"text.switchbot_camera_{device.device_mac.lower()}_{text_definition.key}"
         )
+        
+        
         self.native_value_func = text_definition.native_value_func
         self.set_value_func = text_definition.set_value_func
 
     @property
     def native_value(self) -> str | None:
         """Return the value reported by the text."""
+        
         return self.native_value_func(self.device.device_mac, self.coordinator)
 
     def set_value(self, value: str) -> None:
         """Set the text value."""
+        # גם כאן משאירים רגיל
         self.set_value_func(self.device.device_mac, self.coordinator, value)
