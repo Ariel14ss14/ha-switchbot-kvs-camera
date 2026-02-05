@@ -106,12 +106,16 @@ class SwitchBotKVSNumberEntity(SwitchBotKVSEntity, NumberEntity):
         )
         self._attr_icon = number_definition.icon
         self._attr_has_entity_name = True
+        
+        # --- התיקון: הוספת .lower() ---
         self.entity_id = (
-            f"number.switchbot_camera_{device.device_mac}_{number_definition.key}"
+            f"number.switchbot_camera_{device.device_mac.lower()}_{number_definition.key}"
         )
         self.unique_id = (
-            f"number.switchbot_camera_{device.device_mac}_{number_definition.key}"
+            f"number.switchbot_camera_{device.device_mac.lower()}_{number_definition.key}"
         )
+        # ------------------------------
+        
         self._attr_mode = number_definition.number_mode
         self._attr_native_max_value = number_definition.max_value
         self._attr_native_min_value = number_definition.min_value
