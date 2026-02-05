@@ -184,12 +184,16 @@ class SwitchBotKVSSensorEntity(SwitchBotKVSEntity, SensorEntity):
         )
         self._attr_icon = sensor_definition.icon
         self._attr_has_entity_name = True
+        
+        # --- התיקון: הוספת .lower() ---
         self.entity_id = (
-            f"sensor.switchbot_camera_{device.device_mac}_{sensor_definition.key}"
+            f"sensor.switchbot_camera_{device.device_mac.lower()}_{sensor_definition.key}"
         )
         self.unique_id = (
-            f"sensor.switchbot_camera_{device.device_mac}_{sensor_definition.key}"
+            f"sensor.switchbot_camera_{device.device_mac.lower()}_{sensor_definition.key}"
         )
+        # ------------------------------
+        
         self._attr_device_class = sensor_definition.device_class
         self._attr_state_class = sensor_definition.state_class
         self.native_value_func = sensor_definition.native_value_func
