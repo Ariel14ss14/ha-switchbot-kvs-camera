@@ -277,12 +277,16 @@ class SwitchBotKVSSwitchEntity(SwitchBotKVSEntity, SwitchEntity):
         )
         self._attr_icon = switch_definition.icon
         self._attr_has_entity_name = True
+        
+        # --- התיקון: הוספת .lower() לכתובת ה-MAC ---
         self.entity_id = (
-            f"switch.switchbot_camera_{device.device_mac}_{switch_definition.key}"
+            f"switch.switchbot_camera_{device.device_mac.lower()}_{switch_definition.key}"
         )
         self.unique_id = (
-            f"switch.switchbot_camera_{device.device_mac}_{switch_definition.key}"
+            f"switch.switchbot_camera_{device.device_mac.lower()}_{switch_definition.key}"
         )
+        # -------------------------------------------
+        
         self._attr_device_class = switch_definition.device_class
         self.is_on_func = switch_definition.is_on_func
         self.turn_on_func = switch_definition.turn_on_func
